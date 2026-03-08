@@ -50,7 +50,7 @@ const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigat
         <div className="header-gradient text-white py-3 px-6 relative z-50">
             <div className="max-w-7xl mx-auto flex justify-between items-center gap-4">
                 <div className="flex items-center gap-2 cursor-pointer flex-shrink-0" onClick={() => onNavigate ? onNavigate('home') : window.location.href = '/'}>
-                    <img src="/logo_new.jpg" alt="Logo Bếp 86" className="h-20 rounded-lg shadow-sm" />
+                    <img src="/logo_new.jpg" alt="Logo Bếp 86" className="h-12 md:h-20 rounded-lg shadow-sm" />
                 </div>
 
                 {/* Thanh tìm kiếm */}
@@ -58,11 +58,11 @@ const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigat
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Bạn tìm sản phẩm gì..."
+                            placeholder="Tìm..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onFocus={() => setIsFocused(true)}
-                            className="w-full bg-white/20 border border-white/30 rounded-md py-2.5 px-4 pr-10 outline-none placeholder:text-white/70 focus:bg-white focus:text-zinc-900 focus:placeholder:text-zinc-400 transition-colors"
+                            className="w-full bg-white/20 border border-white/30 rounded-md py-2 md:py-2.5 px-3 md:px-4 pr-10 outline-none placeholder:text-white/70 focus:bg-white focus:text-zinc-900 focus:placeholder:text-zinc-400 transition-colors text-sm"
                         />
                         {searchTerm ? (
                             <button
@@ -117,17 +117,17 @@ const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigat
 
                 <button
                     onClick={() => onNavigate ? onNavigate('checkout') : onOpenCart()}
-                    className="flex items-center gap-2 border border-white/30 rounded-md py-2 px-4 hover:bg-white/10 transition-all flex-shrink-0"
+                    className="flex items-center gap-2 border border-white/30 rounded-md py-2 px-3 md:px-4 hover:bg-white/10 transition-all flex-shrink-0"
                 >
                     <div className="relative">
                         <ShoppingCart className="w-5 h-5" />
                         {cartCount > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                                 {cartCount}
                             </span>
                         )}
                     </div>
-                    <span className="font-bold text-sm hidden sm:inline-block">Giỏ hàng</span>
+                    <span className="font-bold text-xs hidden md:inline-block">Giỏ hàng</span>
                 </button>
             </div>
         </div>

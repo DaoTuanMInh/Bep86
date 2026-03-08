@@ -47,7 +47,7 @@ const Hero = () => {
     const slide = heroSlides[current];
 
     return (
-        <section className="relative overflow-hidden bg-black" style={{ height: '520px' }}>
+        <section className="relative overflow-hidden bg-black h-[300px] md:h-[520px]">
             {/* Slide content */}
             <div
                 style={{
