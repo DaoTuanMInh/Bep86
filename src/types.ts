@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: number;
@@ -10,12 +10,16 @@ export interface Product {
 }
 
 export interface Order {
-  id: number;
+  id: string;
   customer_name: string;
+  customerName?: string;
   customer_email: string;
+  customerEmail?: string;
   total_amount: number;
+  totalAmount?: number;
   status: 'pending' | 'shipped' | 'delivered' | 'cancelled';
   created_at: string;
+  createdAt?: string;
 }
 
 export interface CartItem extends Product {

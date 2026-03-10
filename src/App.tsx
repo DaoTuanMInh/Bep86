@@ -78,7 +78,7 @@ export default function App() {
     setIsCartOpen(true);
   };
 
-  const updateCartQuantity = (id: number, delta: number) => {
+  const updateCartQuantity = (id: string, delta: number) => {
     setCart(prev => prev.map(item => {
       if (item.id === id) {
         const newQty = Math.max(1, item.quantity + delta);
@@ -88,7 +88,7 @@ export default function App() {
     }));
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCart(prev => prev.filter(item => item.id !== id));
   };
 
@@ -120,7 +120,7 @@ export default function App() {
     loadData();
   };
 
-  const handleDeleteProduct = async (id: number) => {
+  const handleDeleteProduct = async (id: string) => {
     if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
       await api.deleteProduct(id);
       loadData();

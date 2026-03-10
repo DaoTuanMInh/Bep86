@@ -4,8 +4,8 @@ import { CartItem } from '../types';
 
 interface CheckoutPageProps {
     cart: CartItem[];
-    onUpdateQuantity: (id: number, delta: number) => void;
-    onRemove: (id: number) => void;
+    onUpdateQuantity: (id: string, delta: number) => void;
+    onRemove: (id: string) => void;
     onPlaceOrder: (name: string, email: string, phone: string, address: string) => void;
     onNavigate: (page: string) => void;
 }

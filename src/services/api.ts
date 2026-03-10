@@ -8,12 +8,12 @@ export const api = {
     return res.json();
   },
 
-  async getProduct(id: number): Promise<Product> {
+  async getProduct(id: string): Promise<Product> {
     const res = await fetch(`${API_BASE}/products/${id}`);
     return res.json();
   },
 
-  async createProduct(product: Omit<Product, "id">): Promise<{ id: number }> {
+  async createProduct(product: Omit<Product, "id">): Promise<{ id: string }> {
     const res = await fetch(`${API_BASE}/products`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -22,7 +22,7 @@ export const api = {
     return res.json();
   },
 
-  async updateProduct(id: number, product: Omit<Product, "id">): Promise<void> {
+  async updateProduct(id: string, product: Omit<Product, "id">): Promise<void> {
     await fetch(`${API_BASE}/products/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -30,7 +30,7 @@ export const api = {
     });
   },
 
-  async deleteProduct(id: number): Promise<void> {
+  async deleteProduct(id: string): Promise<void> {
     await fetch(`${API_BASE}/products/${id}`, {
       method: "DELETE",
     });
@@ -44,9 +44,9 @@ export const api = {
   async placeOrder(order: {
     customer_name: string;
     customer_email: string;
-    items: { id: number; quantity: number; price: number }[];
+    items: { id: string; quantity: number; price: number }[];
     total_amount: number;
-  }): Promise<{ id: number }> {
+  }): Promise<{ id: string }> {
     const res = await fetch(`${API_BASE}/orders`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
