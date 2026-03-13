@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  originalPrice?: number;
   image: string;
   category: string;
   subCategory?: string;
@@ -24,4 +25,22 @@ export interface Order {
 
 export interface CartItem extends Product {
   quantity: number;
+}
+
+export interface NewsPost {
+  id: string | number;
+  slug: string;
+  category: string;
+  date: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  author: string;
+  readTime: number;
+}
+
+export interface MenuCategory {
+  name: string;
+  sub: string[];
 }

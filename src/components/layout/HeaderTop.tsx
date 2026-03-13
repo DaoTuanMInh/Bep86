@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { ShoppingCart, Search, X } from 'lucide-react';
+import { ShoppingCart, Search, X, Phone, MapPin } from 'lucide-react';
 import { Product } from '../../types';
 
 interface HeaderTopProps {
@@ -8,9 +8,10 @@ interface HeaderTopProps {
     onNavigate?: (page: string) => void;
     products?: Product[];
     onNavigateToCategory?: (category: string, subCategory?: string) => void;
+    onOpenProduct?: (product: Product) => void;
 }
 
-const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigateToCategory }: HeaderTopProps) => {
+const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigateToCategory, onOpenProduct }: HeaderTopProps) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const searchRef = useRef<HTMLDivElement>(null);
@@ -41,16 +42,18 @@ const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigat
     const handleSearchSelect = (product: Product) => {
         setSearchTerm('');
         setIsFocused(false);
-        if (onNavigateToCategory) {
+        if (onOpenProduct) {
+            onOpenProduct(product);
+        } else if (onNavigateToCategory) {
             onNavigateToCategory(product.category, product.subCategory || '');
         }
     };
 
     return (
-        <div className="header-gradient text-white py-3 px-6 relative z-50">
+        <div className="header-gradient text-white py-3 px-6 relative z-[200]">
             <div className="max-w-7xl mx-auto flex justify-between items-center gap-4">
                 <div className="flex items-center gap-2 cursor-pointer flex-shrink-0" onClick={() => onNavigate ? onNavigate('home') : window.location.href = '/'}>
-                    <img src="/logo_new.jpg" alt="Logo Bếp 86" className="h-12 md:h-20 rounded-lg shadow-sm" />
+                    <img src="/logo_new.jpg" alt="Logo Bếp 86" className="h-12 md:h-16 rounded-lg shadow-sm" />
                 </div>
 
                 {/* Thanh tìm kiếm */}
@@ -58,7 +61,7 @@ const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigat
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Tìm..."
+                            placeholder="Tìm kiếm sản phẩm..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             onFocus={() => setIsFocused(true)}
@@ -115,20 +118,49 @@ const HeaderTop = ({ cartCount, onOpenCart, onNavigate, products = [], onNavigat
                     )}
                 </div>
 
-                <button
-                    onClick={() => onNavigate ? onNavigate('checkout') : onOpenCart()}
-                    className="flex items-center gap-2 border border-white/30 rounded-md py-2 px-3 md:px-4 hover:bg-white/10 transition-all flex-shrink-0"
-                >
-                    <div className="relative">
-                        <ShoppingCart className="w-5 h-5" />
-                        {cartCount > 0 && (
-                            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                                {cartCount}
-                            </span>
-                        )}
+                {/* Các nút Header Right */}
+                <div className="flex items-center gap-3 md:gap-6 flex-shrink-0 ml-2">
+                    {/* Phone - Ẩn trên mobile nhỏ */}
+                    <div className="hidden lg:flex items-center gap-2">
+                        <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center">
+                            <Phone className="w-4 h-4" />
+                        </div>
+                        <div className="flex flex-col">
+                            <span data-cms-key="header-phone-label" className="text-[10px] uppercase tracking-wider text-white/80 font-bold">Gọi mua hàng</span>
+                            <a href="tel:0985700057" data-cms-link="header-phone-link" data-cms-key="header-phone-val" className="font-black text-sm hover:text-yellow-400 transition-colors">0985.700.057</a>
+                        </div>
                     </div>
-                    <span className="font-bold text-xs hidden md:inline-block">Giỏ hàng</span>
-                </button>
+
+                    {/* Stores - Ẩn trên mobile nhỏ */}
+                    <button
+                        onClick={() => onNavigate && onNavigate('contact')}
+                        className="hidden md:flex items-center gap-2 hover:text-yellow-400 transition-colors group"
+                    >
+                        <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                            <MapPin className="w-4 h-4" />
+                        </div>
+                        <div className="flex flex-col text-left">
+                            <span className="text-[10px] uppercase tracking-wider text-white/80 font-bold">Hệ thống</span>
+                            <span className="font-black text-sm">Cửa hàng</span>
+                        </div>
+                    </button>
+
+                    {/* Giỏ hàng */}
+                    <button
+                        onClick={() => onNavigate ? onNavigate('checkout') : onOpenCart()}
+                        className="flex items-center gap-2 border border-white/30 rounded-md py-2 px-3 md:px-4 hover:bg-white/10 transition-all"
+                    >
+                        <div className="relative">
+                            <ShoppingCart className="w-5 h-5" />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center shadow-sm">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </div>
+                        <span className="font-bold text-xs hidden sm:inline-block">Giỏ hàng</span>
+                    </button>
+                </div>
             </div>
         </div>
     );

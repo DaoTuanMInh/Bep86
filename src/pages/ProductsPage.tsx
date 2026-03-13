@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, Search, SlidersHorizontal, ShoppingCart, X } from 'lucide-react';
-import { Product } from '../types';
+import { Product, MenuCategory } from '../types';
 import { api } from '../services/api';
-import { menuCategories } from '../data/categories';
 import Footer from '../components/layout/Footer';
 
 interface ProductsPageProps {
     initialCategory?: string;
     initialSubCategory?: string;
+    menuCategories: MenuCategory[];
     onAddToCart?: (product: Product) => void;
+    onOpenProduct?: (product: Product) => void;
 }
 
-const ProductsPage = ({ initialCategory, initialSubCategory, onAddToCart }: ProductsPageProps) => {
+const ProductsPage = ({ initialCategory, initialSubCategory, menuCategories, onAddToCart, onOpenProduct }: ProductsPageProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeCategory, setActiveCategory] = useState(initialCategory || 'Tất cả');
@@ -112,7 +113,7 @@ const ProductsPage = ({ initialCategory, initialSubCategory, onAddToCart }: Prod
 
                         {/* Sort */}
                         <div className="mb-6">
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Sắp xếp giá</label>
+                            <label data-cms-key="sidebar-sort-label" className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Sắp xếp giá</label>
                             <div className="flex gap-2">
                                 {[{ v: 'default', l: 'Mặc định' }, { v: 'asc', l: 'Thấp → Cao' }, { v: 'desc', l: 'Cao → Thấp' }].map(s => (
                                     <button
@@ -128,14 +129,14 @@ const ProductsPage = ({ initialCategory, initialSubCategory, onAddToCart }: Prod
 
                         {/* Categories */}
                         <div>
-                            <label className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Danh mục</label>
+                            <label data-cms-key="sidebar-cat-label" className="block text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-2">Danh mục</label>
                             <ul className="space-y-0.5">
                                 <li>
                                     <button
                                         onClick={() => { setActiveCategory('Tất cả'); setActiveSubCategory(''); }}
                                         className={`w-full text-left px-3 py-2.5 text-sm transition-all flex items-center justify-between ${activeCategory === 'Tất cả' ? 'bg-brand-blue text-white font-bold' : 'hover:bg-blue-50 text-zinc-700'}`}
                                     >
-                                        <span>Tất cả sản phẩm</span>
+                                        <span data-cms-key="sidebar-all-products">Tất cả sản phẩm</span>
                                         <span className={`text-[10px] px-1.5 py-0.5 font-bold ${activeCategory === 'Tất cả' ? 'bg-white/20' : 'bg-gray-100 text-zinc-500'}`}>{products.length}</span>
                                     </button>
                                 </li>
@@ -215,7 +216,10 @@ const ProductsPage = ({ initialCategory, initialSubCategory, onAddToCart }: Prod
                                     key={product.id}
                                     className="group bg-white border border-gray-200 hover:border-brand-blue/50 hover:shadow-lg transition-all duration-300 flex flex-col"
                                 >
-                                    <div className="relative overflow-hidden aspect-square bg-gray-50">
+                                    <div
+                                        className="relative overflow-hidden aspect-square bg-gray-50 cursor-pointer"
+                                        onClick={() => onOpenProduct?.(product)}
+                                    >
                                         <img
                                             src={product.image}
                                             alt={product.name}
@@ -231,7 +235,10 @@ const ProductsPage = ({ initialCategory, initialSubCategory, onAddToCart }: Prod
                                     </div>
                                     <div className="p-4 flex flex-col flex-1">
                                         <span className="text-[9px] font-black uppercase tracking-widest text-brand-blue mb-1">{product.category}</span>
-                                        <h3 className="font-bold text-zinc-800 text-sm leading-snug mb-2 flex-1 line-clamp-2">{product.name}</h3>
+                                        <h3
+                                            className="font-bold text-zinc-800 text-sm leading-snug mb-2 flex-1 line-clamp-2 cursor-pointer hover:text-brand-blue transition-colors"
+                                            onClick={() => onOpenProduct?.(product)}
+                                        >{product.name}</h3>
                                         <div className="flex items-center justify-between mt-2">
                                             <span className="text-brand-blue font-black text-base">
                                                 {product.price.toLocaleString('vi-VN')}₫

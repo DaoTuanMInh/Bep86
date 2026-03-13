@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronRight, ShoppingCart, CheckCircle, Search, ArrowUpDown } from 'lucide-react';
-import { Product } from '../types';
+import { Product, MenuCategory } from '../types';
 import { api } from '../services/api';
-import { menuCategories } from '../data/categories';
-import { getCategoryContent } from '../data/categoryContent';
 import Footer from '../components/layout/Footer';
 
 interface CategoryPageProps {
     categoryName: string;
     subCategoryName?: string;
+    menuCategories: MenuCategory[];
     onAddToCart?: (product: Product) => void;
     onNavigate?: (page: string, cat?: string, sub?: string) => void;
     onNavigateToCategory?: (category: string, subCategory?: string) => void;
+    onOpenProduct?: (product: Product) => void;
 }
 
 type SortKey = 'default' | 'price_asc' | 'price_desc' | 'bestseller' | 'newest';
 
-const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, onNavigateToCategory }: CategoryPageProps) => {
+const CategoryPage = ({ categoryName, subCategoryName, menuCategories, onAddToCart, onNavigate, onNavigateToCategory, onOpenProduct }: CategoryPageProps) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [addedId, setAddedId] = useState<number | null>(null);
@@ -24,8 +24,8 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState<SortKey>('default');
     const [expandedCats, setExpandedCats] = useState<string[]>([categoryName]);
+    const [content, setContent] = useState<any>(null);
 
-    const content = getCategoryContent(categoryName);
     const catObj = menuCategories.find(c => c.name === categoryName);
 
     // Đưa danh mục đang active lên đầu sidebar
@@ -37,11 +37,18 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
 
     useEffect(() => {
         setLoading(true);
-        api.getProducts()
-            .then(all => {
-                setProducts(all.filter(p => p.category === categoryName));
-                setLoading(false);
-            });
+        Promise.all([
+            api.getProducts(),
+            api.getCategoryContents()
+        ]).then(([productsData, contentsData]) => {
+            setProducts(productsData.filter(p => p.category === categoryName));
+            
+            // Find content if available
+            const matchingContent = contentsData.find((c: any) => c.name === categoryName);
+            setContent(matchingContent || null);
+            
+            setLoading(false);
+        });
 
         // Luôn mở danh mục đang chọn
         setExpandedCats(prev => prev.includes(categoryName) ? prev : [...prev, categoryName]);
@@ -93,8 +100,8 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
                         <span className="text-yellow-400 font-semibold">{categoryName}</span>
                         {activeSub && <><ChevronRight className="w-3 h-3" /><span className="text-yellow-300">{activeSub}</span></>}
                     </nav>
-                    <h1 className="text-3xl md:text-4xl font-black text-white mb-2">{activeSub || categoryName}</h1>
-                    {content && <p className="text-slate-300 text-sm max-w-2xl">{content.tagline}</p>}
+                    <h1 data-cms-key={`cat-hero-title-${categoryName}`} className="text-3xl md:text-4xl font-black text-white mb-2">{activeSub || categoryName}</h1>
+                    {content && <p data-cms-key={`cat-hero-tagline-${categoryName}`} className="text-slate-300 text-sm max-w-2xl">{content.tagline}</p>}
                 </div>
             </div>
 
@@ -104,7 +111,7 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
                 <aside className="w-60 flex-shrink-0">
                     <div className="bg-white border border-gray-200 overflow-hidden">
                         <div className="header-gradient px-4 py-3 border-b border-white/10">
-                            <span className="text-white text-[10px] font-black uppercase tracking-widest">Danh mục sản phẩm</span>
+                            <span data-cms-key="sidebar-products-title" className="text-white text-[10px] font-black uppercase tracking-widest">Danh mục sản phẩm</span>
                         </div>
                         <ul>
                             {sortedCategories.map(cat => {
@@ -142,7 +149,7 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
                                                         }}
                                                         className={`w-full text-left pl-7 pr-4 py-2 text-xs transition-all ${(isCurrentCat && activeSub === '') ? 'text-brand-blue font-bold bg-blue-50' : 'text-zinc-500 hover:text-brand-blue hover:bg-blue-50'}`}
                                                     >
-                                                        — Giới thiệu
+                                                        — <span data-cms-key="sidebar-label-intro">Giới thiệu</span>
                                                     </button>
                                                 </li>
                                                 {cat.sub.map(sub => (
@@ -168,9 +175,9 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
 
                     {/* CTA */}
                     <div className="mt-4 header-gradient p-5 text-white shadow-lg">
-                        <p className="font-black text-sm mb-1">Cần tư vấn?</p>
-                        <p className="text-blue-100 text-xs mb-3">Gặp chuyên gia ngay hôm nay</p>
-                        <a href="tel:0985700057" className="flex items-center gap-2 font-black text-yellow-300 hover:text-yellow-200 text-sm transition-colors">
+                        <p data-cms-key="sidebar-cta-title" className="font-black text-sm mb-1">Cần tư vấn?</p>
+                        <p data-cms-key="sidebar-cta-sub" className="text-blue-100 text-xs mb-3">Gặp chuyên gia ngay hôm nay</p>
+                        <a href="tel:0985700057" data-cms-link="sidebar-cta-link" data-cms-key="sidebar-cta-val" className="flex items-center gap-2 font-black text-yellow-300 hover:text-yellow-200 text-sm transition-colors">
                             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
                             </svg>
@@ -283,7 +290,10 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
                                     key={product.id}
                                     className="group bg-white border border-gray-200 hover:border-brand-blue/50 hover:shadow-lg transition-all duration-300 flex flex-col"
                                 >
-                                    <div className="relative overflow-hidden aspect-square bg-gray-50">
+                                    <div
+                                        className="relative overflow-hidden aspect-square bg-gray-50 cursor-pointer"
+                                        onClick={() => onOpenProduct?.(product)}
+                                    >
                                         <img
                                             src={product.image}
                                             alt={product.name}
@@ -297,7 +307,10 @@ const CategoryPage = ({ categoryName, subCategoryName, onAddToCart, onNavigate, 
                                         )}
                                     </div>
                                     <div className="p-4 flex flex-col flex-1">
-                                        <h3 className="font-bold text-zinc-800 text-sm leading-snug mb-auto line-clamp-2">{product.name}</h3>
+                                        <h3
+                                            className="font-bold text-zinc-800 text-sm leading-snug mb-auto line-clamp-2 cursor-pointer hover:text-brand-blue transition-colors"
+                                            onClick={() => onOpenProduct?.(product)}
+                                        >{product.name}</h3>
                                         <div className="mt-3">
                                             <span className="text-brand-blue font-black text-base block mb-2">
                                                 {product.price.toLocaleString('vi-VN')}₫

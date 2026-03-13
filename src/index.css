@@ -62,3 +62,27 @@
 .product-info-v2 {
   @apply bg-zinc-100 p-4 text-center flex-1 flex flex-col justify-center;
 }
+
+/* Allow simple transition but no annoying outlines */
+[contenteditable='true'] {
+  transition: background 0.2s;
+}
+
+[contenteditable='true']:focus {
+  outline: none;
+}
+
+.editable-image {
+  cursor: pointer;
+}
+
+
+img.admin-img-edit {
+  position: relative;
+  z-index: 50;
+}
+
+/* Force sharp corners on cards, images, and videos per user request */
+img:not(.rounded-full), video, iframe, article, .rounded-lg, .rounded-xl, .rounded-2xl, .rounded-3xl {
+  border-radius: 0 !important;
+}

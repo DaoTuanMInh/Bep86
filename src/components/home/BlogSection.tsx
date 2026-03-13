@@ -1,12 +1,13 @@
 import { ChevronRight } from 'lucide-react';
-import { newsPosts, NewsPost } from '../../data/news';
+import { NewsPost } from '../../types';
 
 interface BlogSectionProps {
+    newsPosts: NewsPost[];
     onNavigate: (page: string) => void;
     onOpenPost: (post: NewsPost) => void;
 }
 
-const BlogSection = ({ onNavigate, onOpenPost }: BlogSectionProps) => (
+const BlogSection = ({ newsPosts, onNavigate, onOpenPost }: BlogSectionProps) => (
     <section className="bg-white py-16 px-6">
         <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-8">
@@ -24,9 +25,11 @@ const BlogSection = ({ onNavigate, onOpenPost }: BlogSectionProps) => (
                         key={post.id}
                         onClick={() => onOpenPost(post)}
                         className="border border-zinc-100 rounded-none overflow-hidden hover:shadow-lg transition-all group cursor-pointer"
+                        data-no-edit="true"
                     >
                         <div className="bg-zinc-100 h-36 flex items-center justify-center relative overflow-hidden">
                             <img
+                                data-no-edit-img="true"
                                 src={post.image}
                                 alt={post.title}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -36,7 +39,7 @@ const BlogSection = ({ onNavigate, onOpenPost }: BlogSectionProps) => (
                                 <div className="text-[10px] font-bold uppercase">Th{post.date.split('/')[1]}</div>
                             </div>
                         </div>
-                        <div className="p-4">
+                        <div className="p-4" data-no-edit>
                             <h4 className="font-bold text-sm text-zinc-800 leading-snug mb-2 group-hover:text-brand-blue transition-colors line-clamp-2">{post.title}</h4>
                             <p className="text-zinc-400 text-xs leading-relaxed mb-3 line-clamp-2">{post.excerpt}</p>
                             <span className="text-brand-blue text-xs font-bold flex items-center gap-1">

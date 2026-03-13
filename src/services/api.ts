@@ -54,4 +54,26 @@ export const api = {
     });
     return res.json();
   },
+
+  // ── CMS Dynamic Data ──
+  async getCategories() {
+    const res = await fetch(`${API_BASE}/categories`);
+    return res.json();
+  },
+  
+  async getNews() {
+    const res = await fetch(`${API_BASE}/news`);
+    const data = await res.json();
+    return Array.isArray(data) ? data.map((n: any) => ({ ...n, id: n._id?.toString() || n.id })) : data;
+  },
+
+  async getNewsBySlug(slug: string) {
+    const res = await fetch(`${API_BASE}/news/${slug}`);
+    return res.json();
+  },
+  
+  async getCategoryContents() {
+    const res = await fetch(`${API_BASE}/category-content`);
+    return res.json();
+  }
 };

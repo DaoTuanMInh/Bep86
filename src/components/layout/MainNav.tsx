@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Menu as MenuIcon, ChevronRight, X, Home, Info, Newspaper, Video, Phone as PhoneIcon, User, ChevronDown } from 'lucide-react';
-import { menuCategories } from '../../data/categories';
 import { motion, AnimatePresence } from 'motion/react';
+import { MenuCategory } from '../../types';
 
 interface MainNavProps {
     onOpenAdmin: () => void;
     onNavigate: (page: string) => void;
     onNavigateToCategory: (category: string, subCategory?: string) => void;
     currentPage: string;
+    menuCategories: MenuCategory[];
 }
 
-const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }: MainNavProps) => {
+const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage, menuCategories }: MainNavProps) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [hoveredCat, setHoveredCat] = useState<string | null>(null);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,7 +50,7 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
                             onClick={() => onNavigate('home')}
                             className={`px-5 py-3 text-sm uppercase cursor-pointer transition-all border-r border-white/10 relative group ${currentPage === 'home' ? 'font-bold text-yellow-300' : 'hover:text-yellow-300'}`}
                         >
-                            Trang chủ
+                            <span data-cms-key="nav-label-home">Trang chủ</span>
                             <span className={`absolute bottom-0 left-0 w-full h-1 bg-yellow-400 transition-transform origin-left ${currentPage === 'home' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
                         </span>
 
@@ -61,12 +62,12 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
                         >
                             <div className="bg-black/10 hover:bg-black/20 transition-all px-6 py-3 flex items-center gap-2 cursor-pointer border-r border-white/10 h-full">
                                 <MenuIcon className="w-5 h-5" />
-                                <span className="font-bold text-sm uppercase tracking-tight">Danh mục sản phẩm</span>
+                                <span data-cms-key="nav-cat-label" className="font-bold text-sm uppercase tracking-tight">Danh mục sản phẩm</span>
                             </div>
 
                             {menuOpen && (
                                 <div className="absolute top-full left-0 flex shadow-2xl z-50 min-w-[260px]">
-                                    <ul className="header-gradient text-white w-64 py-2 shadow-2xl border-t border-white/10">
+                                    <ul className="bg-white text-zinc-900 w-64 py-2 shadow-2xl border-t-2 border-brand-blue">
                                         {menuCategories.map(cat => (
                                             <li
                                                 key={cat.name}
@@ -77,20 +78,20 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
                                                 <a
                                                     href="#"
                                                     onClick={e => { e.preventDefault(); onNavigateToCategory(cat.name); setMenuOpen(false); }}
-                                                    className="flex items-center justify-between px-4 py-2.5 text-sm hover:bg-white/15 transition-colors"
+                                                    className="flex items-center justify-between px-4 py-2.5 text-sm hover:bg-brand-blue hover:text-white transition-colors"
                                                 >
                                                     <span className="font-medium">{cat.name}</span>
-                                                    {cat.sub.length > 0 && <ChevronRight className="w-4 h-4 text-white/60" />}
+                                                    {cat.sub.length > 0 && <ChevronRight className="w-4 h-4 opacity-50" />}
                                                 </a>
 
                                                 {cat.sub.length > 0 && hoveredCat === cat.name && (
-                                                    <ul className="absolute left-full top-0 header-gradient text-white shadow-xl w-64 py-2 border-l border-white/20">
+                                                    <ul className="absolute left-full top-0 bg-white text-zinc-900 shadow-xl w-64 py-2 border-l border-zinc-100">
                                                         {cat.sub.map(sub => (
                                                             <li key={sub}>
                                                                 <a
                                                                     href="#"
                                                                     onClick={e => { e.preventDefault(); onNavigateToCategory(cat.name, sub); setMenuOpen(false); setHoveredCat(null); }}
-                                                                    className="block px-4 py-2.5 text-sm hover:bg-white/15 transition-colors font-medium text-white/90"
+                                                                    className="block px-4 py-2.5 text-sm hover:bg-brand-blue hover:text-white transition-colors font-medium text-zinc-700"
                                                                 >
                                                                     {sub}
                                                                 </a>
@@ -108,14 +109,14 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
                         {/* Other Desktop Links */}
                         <ul className="flex items-center flex-1">
                             {navItems.slice(1).map(item => (
-                                <li
-                                    key={item.label}
-                                    onClick={() => onNavigate(item.page)}
-                                    className={`px-5 py-3 text-sm uppercase cursor-pointer transition-all relative group ${item.page === currentPage ? 'font-bold text-yellow-300' : 'hover:text-yellow-300'}`}
-                                >
-                                    {item.label}
-                                    <span className={`absolute bottom-0 left-0 w-full h-1 bg-yellow-400 transition-transform origin-left ${item.page === currentPage ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
-                                </li>
+                                    <li
+                                        key={item.label}
+                                        onClick={() => onNavigate(item.page)}
+                                        className={`px-5 py-3 text-sm uppercase cursor-pointer transition-all relative group ${item.page === currentPage ? 'font-bold text-yellow-300' : 'hover:text-yellow-300'}`}
+                                    >
+                                        <span data-cms-key={`nav-label-${item.page}`}>{item.label}</span>
+                                        <span className={`absolute bottom-0 left-0 w-full h-1 bg-yellow-400 transition-transform origin-left ${item.page === currentPage ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`} />
+                                    </li>
                             ))}
                         </ul>
 
@@ -128,7 +129,7 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
                     </div>
 
                     {/* Mobile Title / Logo Placeholder */}
-                    <div className="md:hidden flex-1 text-center font-black uppercase tracking-widest text-xs opacity-80">
+                    <div data-cms-key="mobile-nav-title" className="md:hidden flex-1 text-center font-black uppercase tracking-widest text-xs opacity-80">
                         Hệ Thống Bếp Công Nghiệp
                     </div>
 
@@ -166,7 +167,7 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
 
                             <div className="flex-1 overflow-y-auto">
                                 <div className="p-4">
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4 px-2">Điều hướng</div>
+                                    <div data-cms-key="mobile-nav-header-nav" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4 px-2">Điều hướng</div>
                                     <ul className="space-y-1">
                                         {navItems.map(item => (
                                             <li key={item.page}>
@@ -175,7 +176,7 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
                                                     className={`w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${currentPage === item.page ? 'bg-brand-red text-white' : 'text-zinc-400 hover:bg-zinc-800'}`}
                                                 >
                                                     {item.icon}
-                                                    <span className="font-bold text-sm">{item.label}</span>
+                                                    <span data-cms-key={`mobile-nav-label-${item.page}`} className="font-bold text-sm">{item.label}</span>
                                                 </button>
                                             </li>
                                         ))}
@@ -183,7 +184,7 @@ const MainNav = ({ onOpenAdmin, onNavigate, onNavigateToCategory, currentPage }:
 
                                     <div className="h-px bg-zinc-800 my-6" />
 
-                                    <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4 px-2">Danh mục sản phẩm</div>
+                                    <div data-cms-key="mobile-nav-header-cat" className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4 px-2">Danh mục sản phẩm</div>
                                     <ul className="space-y-1">
                                         {menuCategories.map(cat => (
                                             <li key={cat.name}>

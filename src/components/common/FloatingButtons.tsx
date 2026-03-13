@@ -7,6 +7,7 @@ const FloatingButtons = () => {
             {/* Zalo Button */}
             <a
                 href="https://zalo.me/0985700057"
+                data-cms-link="link-floating-zalo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative group"
@@ -20,7 +21,7 @@ const FloatingButtons = () => {
                 <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-20" style={{ animationDuration: '2s' }}></div>
 
                 {/* Tooltip */}
-                <span className="absolute right-full mr-4 bg-zinc-900 text-white text-sm font-bold px-3 py-1.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span data-cms-key="tooltip-floating-zalo" className="absolute right-full mr-4 bg-zinc-900 text-white text-sm font-bold px-3 py-1.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     Chat Zalo
                 </span>
             </a>
@@ -28,6 +29,7 @@ const FloatingButtons = () => {
             {/* Phone Button */}
             <a
                 href="tel:0985700057"
+                data-cms-link="link-floating-phone"
                 className="w-14 h-14 bg-brand-red rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform relative group"
             >
                 <Phone className="w-6 h-6 text-white animate-pulse" />
@@ -35,7 +37,7 @@ const FloatingButtons = () => {
                 <div className="absolute inset-0 bg-brand-red rounded-full animate-ping opacity-20" style={{ animationDuration: '1.5s' }}></div>
 
                 {/* Tooltip */}
-                <span className="absolute right-full mr-4 bg-zinc-900 text-white text-sm font-bold px-3 py-1.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                <span data-cms-key="tooltip-floating-phone" className="absolute right-full mr-4 bg-zinc-900 text-white text-sm font-bold px-3 py-1.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     Gọi ngay: 0985.700.057
                 </span>
             </a>
